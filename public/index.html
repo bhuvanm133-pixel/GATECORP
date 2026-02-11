@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GATECORP - Secure File Transfer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="background">
+<div class="gradient-orb orb-1"></div>
+<div class="gradient-orb orb-2"></div>
+<div class="gradient-orb orb-3"></div>
+</div>
+
+<div class="container">
+<header>
+<div class="status">
+<span class="status-dot"></span>
+<span>SYSTEM ONLINE</span>
+</div>
+<h1 class="logo">GATECORP</h1>
+<p class="tagline">[ Secure File Transfer Protocol ]</p>
+</header>
+
+<main>
+<div id="upload-section" class="card">
+<div class="card-header">
+<span class="icon">📤</span>
+<h2>Upload File</h2>
+</div>
+
+<div id="drop-zone" class="drop-zone">
+<div class="drop-content">
+<span class="drop-icon">⬆️</span>
+<p>Drag & drop your file here</p>
+<span class="or">// OR //</span>
+<label for="file-input" class="browse-btn">Select File</label>
+<input type="file" id="file-input" hidden>
+</div>
+</div>
+
+<div id="file-info" class="file-info hidden">
+<span class="file-icon">📄</span>
+<div class="file-details">
+<p id="file-name">filename.zip</p>
+<p id="file-size">2.4 MB</p>
+</div>
+<button id="remove-file" class="remove-btn">✕</button>
+</div>
+
+<div id="progress-container" class="progress-container hidden">
+<div class="progress-bar">
+<div id="progress" class="progress"></div>
+</div>
+<p id="progress-text">> Uploading... 0%</p>
+</div>
+
+<button id="upload-btn" class="primary-btn hidden">
+<span>Initialize Transfer</span>
+<span class="btn-icon">►</span>
+</button>
+</div>
+
+<div id="code-section" class="card hidden">
+<div class="card-header">
+<span class="icon">✅</span>
+<h2>Transfer Complete</h2>
+</div>
+
+<div class="code-display">
+<p class="code-label">> Access Code</p>
+<div class="code-box">
+<span id="share-code">847291</span>
+<button id="copy-btn" class="copy-btn">[COPY]</button>
+</div>
+</div>
+
+<div class="expire-info">
+<span>⏱️</span>
+<p>Auto-destruct in 24 hours</p>
+</div>
+
+<button id="new-upload" class="secondary-btn">[ New Transfer ]</button>
+</div>
+
+<div id="download-section" class="card">
+<div class="card-header">
+<span class="icon">📥</span>
+<h2>Download File</h2>
+</div>
+
+<div class="code-input-container">
+<input type="text" id="code-input" placeholder="Enter access code" maxlength="6">
+<button id="download-btn" class="primary-btn">
+<span>Decrypt</span>
+<span class="btn-icon">↓</span>
+</button>
+</div>
+
+<div id="download-info" class="download-info hidden">
+<div class="file-preview">
+<span class="file-icon">📄</span>
+<div>
+<p id="download-name">filename.zip</p>
+<p id="download-size">2.4 MB</p>
+</div>
+</div>
+</div>
+
+<p id="download-error" class="error hidden">> ERROR: File not found or expired</p>
+</div>
+</main>
+
+<footer>
+<p>[ GATECORP ] // Secure Systems</p>
+<p class="footer-sub">Files auto-destruct after 24 hours</p>
+</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
