@@ -262,3 +262,114 @@ downloadError.classList.add('hidden');
 codeInput.addEventListener('keypress', (e) => {
 if (e.key === 'Enter') checkBtn.click();
 });
+
+// ═══════════════════════════════════════
+// TAB NAVIGATION
+// ═══════════════════════════════════════
+
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabs.forEach(tab => {
+tab.addEventListener('click', () => {
+// Remove active from all
+tabs.forEach(t => t.classList.remove('active'));
+tabContents.forEach(c => c.classList.remove('active'));
+
+// Add active to clicked
+tab.classList.add('active');
+const tabId = tab.dataset.tab + '-tab';
+document.getElementById(tabId).classList.add('active');
+});
+});
+
+// ═══════════════════════════════════════
+// SOCIAL MEDIA DOWNLOADER
+// ═══════════════════════════════════════
+
+const socialUrl = document.getElementById('social-url');
+const fetchBtn = document.getElementById('fetch-btn');
+const socialLoading = document.getElementById('social-loading');
+const socialResult = document.getElementById('social-result');
+const socialError = document.getElementById('social-error');
+const platformIcon = document.getElementById('platform-icon');
+const resultPlatform = document.getElementById('result-platform');
+const resultTitle = document.getElementById('result-title');
+const resultThumbnail = document.getElementById('result-thumbnail');
+const downloadOptions = document.getElementById('download-options');
+
+const platformIcons = {
+'Instagram': '📸',
+'TikTok': '🎵',
+'Twitter/X': '🐦',
+'YouTube': '📺',
+'Facebook': '📘',
+'Pinterest': '📌',
+'Reddit': '🤖',
+'LinkedIn': '💼',
+'Unknown': '🔗'
+};
+
+fetchBtn.addEventListener('click', fetchMedia);
+socialUrl.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') fetchMedia();
+});
+
+async function fetchMedia() {
+const url = socialUrl.value.trim();
+
+if (!url) {
+socialError.textContent = '> ERROR: Please enter a URL';
+socialError.classList.remove('hidden');
+return;
+}
+
+// Reset
+socialResult.classList.add('hidden');
+socialError.classList.add('hidden');
+socialLoading.classList.remove('hidden');
+
+try {
+const response = await fetch('/api/social-download', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ url })
+});
+
+const data = await response.json();
+
+if (response.ok && data.success) {
+displayResult(data);
+} else {
+socialError.textContent = '> ERROR: ' + (data.error || 'Could not fetch media');
+socialError.classList.remove('hidden');
+}
+} catch (error) {
+socialError.textContent = '> ERROR: Connection failed';
+socialError.classList.remove('hidden');
+} finally {
+socialLoading.classList.add('hidden');
+}
+}
+
+function displayResult(data) {
+    // ... existing code ...
+    downloadOptions.innerHTML = '';
+
+    data.medias.forEach((item, index) => {
+        const quality = item.quality || item.label || `Option ${index + 1}`;
+        const ext = item.extension || 'MP4';
+        
+        const linkEl = document.createElement('div');
+        linkEl.className = 'download-link';
+        linkEl.innerHTML = `
+            <div>
+                <span class="quality">${quality.toUpperCase()}</span>
+                <span class="size"> • ${ext.toUpperCase()}</span>
+            </div>
+            <a href="${item.url}" target="_blank" rel="noopener">Download</a>
+        `;
+        downloadOptions.appendChild(linkEl);
+    });
+    // ... existing code ...
+}

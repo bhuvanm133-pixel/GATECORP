@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GATECORP - Secure File Transfer</title>
+<title>GATECORP - File Tools Hub</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,10 +21,17 @@
 <span>SYSTEM ONLINE</span>
 </div>
 <h1 class="logo">GATECORP</h1>
-<p class="tagline">[ Secure File Transfer Protocol ]</p>
+<p class="tagline">[ File Operations Hub ]</p>
 </header>
 
-<main>
+<!-- Tab Navigation -->
+<nav class="tabs">
+<button class="tab active" data-tab="share">📤 File Share</button>
+<button class="tab" data-tab="social">📥 Social Download</button>
+</nav>
+
+<!-- Tab Content: File Share -->
+<div id="share-tab" class="tab-content active">
 <!-- Upload Section -->
 <div id="upload-section" class="card">
 <div class="card-header">
@@ -51,7 +58,6 @@
 <button id="remove-file" class="remove-btn">✕</button>
 </div>
 
-<!-- Upload Options -->
 <div id="upload-options" class="upload-options hidden">
 <div class="option-group">
 <label>🔐 Password (optional)</label>
@@ -97,7 +103,6 @@
 </div>
 </div>
 
-<!-- QR Code -->
 <div class="qr-container">
 <p class="qr-label">> Scan to Download</p>
 <img id="qr-code" src="" alt="QR Code">
@@ -111,10 +116,6 @@
 <div class="info-item">
 <span>⏱️</span>
 <p id="expire-text">Self-destructs in 24 hours</p>
-</div>
-<div class="info-item">
-<span>📊</span>
-<p id="download-count">Downloads: 0</p>
 </div>
 </div>
 
@@ -157,22 +158,61 @@
 </button>
 </div>
 
-<p id="download-error" class="error hidden">> ERROR: File not found or expired</p>
+<p id="download-error" class="error hidden">> ERROR: File not found</p>
 </div>
-</main>
+</div>
+
+<!-- Tab Content: Social Download -->
+<div id="social-tab" class="tab-content">
+<div class="card">
+<div class="card-header">
+<span class="icon">📥</span>
+<h2>Social Media Downloader</h2>
+</div>
+
+<div class="platforms">
+<span class="platform-badge">📸 Instagram</span>
+<span class="platform-badge">🎵 TikTok</span>
+<span class="platform-badge">🐦 Twitter</span>
+<span class="platform-badge">📺 YouTube</span>
+<span class="platform-badge">📘 Facebook</span>
+</div>
+
+<div class="social-input-container">
+<input type="text" id="social-url" placeholder="Paste video/image URL here...">
+<button id="fetch-btn" class="primary-btn">
+<span>Fetch</span>
+<span class="btn-icon">🔍</span>
+</button>
+</div>
+
+<div id="social-loading" class="loading hidden">
+<div class="spinner"></div>
+<p>> Fetching media...</p>
+</div>
+
+<div id="social-result" class="social-result hidden">
+<div class="result-header">
+<span id="platform-icon">📸</span>
+<div>
+<p id="result-platform">Instagram</p>
+<p id="result-title">Video Title</p>
+</div>
+</div>
+
+<img id="result-thumbnail" class="thumbnail hidden" src="" alt="Thumbnail">
+
+<div id="download-options" class="download-options">
+<!-- Download links will be inserted here -->
+</div>
+</div>
+
+<p id="social-error" class="error hidden">> ERROR: Could not fetch media</p>
+</div>
+</div>
 
 <footer>
-    <footer>
-<div class="support-section">
-<p class="support-text">Enjoying GATECORP?</p>
-<a href="https://ko-fi.com/gatecorp" target="_blank" class="support-btn">
-🍰 Buy me a Cake!!
-</a>
-</div>
-<p>[ GATECORP ] // Secure Systems v2.0</p>
-<p class="footer-sub">See you space cowboy... 🚀</p>
-</footer>   
-<p>[ GATECORP ] // Secure Systems v2.0</p>
+<p>[ GATECORP ] // File Operations Hub v3.0</p>
 <p class="footer-sub">See you space cowboy... 🚀</p>
 </footer>
 </div>
