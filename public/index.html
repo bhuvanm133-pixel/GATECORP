@@ -11,6 +11,7 @@
 <div class="gradient-orb orb-1"></div>
 <div class="gradient-orb orb-2"></div>
 <div class="gradient-orb orb-3"></div>
+<div class="grid-overlay"></div>
 </div>
 
 <div class="container">
@@ -24,10 +25,11 @@
 </header>
 
 <main>
+<!-- Upload Section -->
 <div id="upload-section" class="card">
 <div class="card-header">
 <span class="icon">📤</span>
-<h2>Upload File</h2>
+<h2>Initialize Upload</h2>
 </div>
 
 <div id="drop-zone" class="drop-zone">
@@ -49,6 +51,24 @@
 <button id="remove-file" class="remove-btn">✕</button>
 </div>
 
+<!-- Upload Options -->
+<div id="upload-options" class="upload-options hidden">
+<div class="option-group">
+<label>🔐 Password (optional)</label>
+<input type="password" id="file-password" placeholder="Leave empty for no password">
+</div>
+<div class="option-group">
+<label>⏱️ Self-destruct in</label>
+<select id="expiry-time">
+<option value="1">1 hour</option>
+<option value="6">6 hours</option>
+<option value="24" selected>24 hours</option>
+<option value="72">3 days</option>
+<option value="168">7 days</option>
+</select>
+</div>
+</div>
+
 <div id="progress-container" class="progress-container hidden">
 <div class="progress-bar">
 <div id="progress" class="progress"></div>
@@ -62,6 +82,7 @@
 </button>
 </div>
 
+<!-- Code Section -->
 <div id="code-section" class="card hidden">
 <div class="card-header">
 <span class="icon">✅</span>
@@ -76,25 +97,42 @@
 </div>
 </div>
 
-<div class="expire-info">
+<!-- QR Code -->
+<div class="qr-container">
+<p class="qr-label">> Scan to Download</p>
+<img id="qr-code" src="" alt="QR Code">
+</div>
+
+<div class="transfer-info">
+<div id="password-notice" class="info-item hidden">
+<span>🔐</span>
+<p>Password protected</p>
+</div>
+<div class="info-item">
 <span>⏱️</span>
-<p>Auto-destruct in 24 hours</p>
+<p id="expire-text">Self-destructs in 24 hours</p>
+</div>
+<div class="info-item">
+<span>📊</span>
+<p id="download-count">Downloads: 0</p>
+</div>
 </div>
 
 <button id="new-upload" class="secondary-btn">[ New Transfer ]</button>
 </div>
 
+<!-- Download Section -->
 <div id="download-section" class="card">
 <div class="card-header">
 <span class="icon">📥</span>
-<h2>Download File</h2>
+<h2>Retrieve File</h2>
 </div>
 
 <div class="code-input-container">
 <input type="text" id="code-input" placeholder="Enter access code" maxlength="6">
-<button id="download-btn" class="primary-btn">
-<span>Decrypt</span>
-<span class="btn-icon">↓</span>
+<button id="check-btn" class="primary-btn">
+<span>Check</span>
+<span class="btn-icon">→</span>
 </button>
 </div>
 
@@ -104,8 +142,19 @@
 <div>
 <p id="download-name">filename.zip</p>
 <p id="download-size">2.4 MB</p>
+<p id="download-stats" class="download-stats"></p>
 </div>
 </div>
+
+<div id="password-input-container" class="password-input-container hidden">
+<label>🔐 Enter Password</label>
+<input type="password" id="download-password" placeholder="Password required">
+</div>
+
+<button id="download-btn" class="primary-btn">
+<span>Decrypt & Download</span>
+<span class="btn-icon">↓</span>
+</button>
 </div>
 
 <p id="download-error" class="error hidden">> ERROR: File not found or expired</p>
@@ -113,8 +162,8 @@
 </main>
 
 <footer>
-<p>[ GATECORP ] // Secure Systems</p>
-<p class="footer-sub">Files auto-destruct after 24 hours</p>
+<p>[ GATECORP ] // Secure Systems v2.0</p>
+<p class="footer-sub">See you space cowboy... 🚀</p>
 </footer>
 </div>
 
