@@ -1,222 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GATECORP - File Tools Hub</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATECORP - Secure Tools</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="background">
-<div class="gradient-orb orb-1"></div>
-<div class="gradient-orb orb-2"></div>
-<div class="gradient-orb orb-3"></div>
-<div class="grid-overlay"></div>
-</div>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="grid-overlay"></div>
+    </div>
 
-<div class="container">
-<header>
-<div class="status">
-<span class="status-dot"></span>
-<span>SYSTEM ONLINE</span>
-</div>
-<h1 class="logo">GATECORP</h1>
-<p class="tagline">[ File Operations Hub ]</p>
-</header>
+    <!-- NEW HEADER BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">GATECORP</h1>
+            <div class="nav-menu">
+                <button class="nav-link active" data-tab="share">File Transfer</button>
+                <button class="nav-link" data-tab="social">Video Downloader</button>
+            </div>
+        </div>
+    </nav>
 
-<!-- Tab Navigation -->
-<nav class="tabs">
-<button class="tab active" data-tab="share">📤 File Share</button>
-<button class="tab" data-tab="social">📥 Social Download</button>
-</nav>
+    <div class="container">
+        <header class="hero-header">
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>SYSTEM ONLINE</span>
+            </div>
+            <p class="tagline">[ Secure File Transfer Protocol ]</p>
+        </header>
 
-<!-- Tab Content: File Share -->
-<div id="share-tab" class="tab-content active">
-<!-- Upload Section -->
-<div id="upload-section" class="card">
-<div class="card-header">
-<span class="icon">📤</span>
-<h2>Initialize Upload</h2>
-</div>
+        <!-- FILE SHARE TAB -->
+        <div id="share-tab" class="tab-content active">
+            <div id="upload-section" class="card">
+                <div class="card-header">📤 Initialize Upload</div>
+                <div id="drop-zone" class="drop-zone">
+                    <span class="drop-icon">⬆️</span>
+                    <p>Drop file or <label for="file-input" class="browse-btn">Select</label></p>
+                    <input type="file" id="file-input" hidden>
+                </div>
+                <div id="file-info" class="file-info hidden">
+                    <span id="file-name"></span> <button id="remove-file">✕</button>
+                </div>
+                <div id="upload-options" class="upload-options hidden">
+                    <input type="password" id="file-password" placeholder="Add Password (Optional)">
+                    <select id="expiry-time">
+                        <option value="24">24 Hours</option>
+                        <option value="168">7 Days</option>
+                    </select>
+                </div>
+                <div id="progress-container" class="progress-container hidden">
+                    <div class="progress-bar"><div id="progress" class="progress"></div></div>
+                </div>
+                <button id="upload-btn" class="primary-btn hidden">Start Transfer ►</button>
+            </div>
 
-<div id="drop-zone" class="drop-zone">
-<div class="drop-content">
-<span class="drop-icon">⬆️</span>
-<p>Drag & drop your file here</p>
-<span class="or">// OR //</span>
-<label for="file-input" class="browse-btn">Select File</label>
-<input type="file" id="file-input" hidden>
-</div>
-</div>
+            <div id="code-section" class="card hidden">
+                <div class="code-display">
+                    <p>> Access Code</p>
+                    <span id="share-code">000000</span>
+                    <button id="copy-btn">[COPY]</button>
+                </div>
+                <div class="qr-container"><img id="qr-code" src=""></div>
+                <button id="new-upload" class="secondary-btn">New Transfer</button>
+            </div>
 
-<div id="file-info" class="file-info hidden">
-<span class="file-icon">📄</span>
-<div class="file-details">
-<p id="file-name">filename.zip</p>
-<p id="file-size">2.4 MB</p>
-</div>
-<button id="remove-file" class="remove-btn">✕</button>
-</div>
+            <div id="download-section" class="card">
+                <div class="card-header">📥 Retrieve File</div>
+                <div class="code-input-container">
+                    <input type="text" id="code-input" placeholder="Enter Code" maxlength="6">
+                    <button id="check-btn" class="primary-btn">Check</button>
+                </div>
+                <div id="download-info" class="hidden">
+                    <p id="download-name"></p>
+                    <input type="password" id="download-password" class="hidden" placeholder="Password Required">
+                    <button id="download-btn" class="primary-btn">Download ↓</button>
+                </div>
+                <p id="download-error" class="error hidden">> ERROR</p>
+            </div>
+        </div>
 
-<div id="upload-options" class="upload-options hidden">
-<div class="option-group">
-<label>🔐 Password (optional)</label>
-<input type="password" id="file-password" placeholder="Leave empty for no password">
-</div>
-<div class="option-group">
-<label>⏱️ Self-destruct in</label>
-<select id="expiry-time">
-<option value="1">1 hour</option>
-<option value="6">6 hours</option>
-<option value="24" selected>24 hours</option>
-<option value="72">3 days</option>
-<option value="168">7 days</option>
-</select>
-</div>
-</div>
+        <!-- VIDEO DOWNLOADER TAB -->
+        <div id="social-tab" class="tab-content">
+            <div class="card">
+                <div class="card-header">🎬 Video Downloader</div>
+                <div class="social-input-container">
+                    <input type="text" id="social-url" placeholder="Paste Link (Insta, TikTok, YouTube...)">
+                    <button id="fetch-btn" class="primary-btn">Fetch 🔍</button>
+                </div>
+                <div id="social-loading" class="loading hidden"><div class="spinner"></div></div>
+                <div id="social-result" class="hidden">
+                    <p id="result-title"></p>
+                    <img id="result-thumbnail" class="thumbnail" src="">
+                    <div id="download-options" class="download-options"></div>
+                </div>
+                <p id="social-error" class="error hidden">> ERROR: Fetch Failed</p>
+            </div>
+        </div>
 
-<div id="progress-container" class="progress-container hidden">
-<div class="progress-bar">
-<div id="progress" class="progress"></div>
-</div>
-<p id="progress-text">> Uploading... 0%</p>
-</div>
-
-<button id="upload-btn" class="primary-btn hidden">
-<span>Initialize Transfer</span>
-<span class="btn-icon">►</span>
-</button>
-</div>
-
-<!-- Code Section -->
-<div id="code-section" class="card hidden">
-<div class="card-header">
-<span class="icon">✅</span>
-<h2>Transfer Complete</h2>
-</div>
-
-<div class="code-display">
-<p class="code-label">> Access Code</p>
-<div class="code-box">
-<span id="share-code">847291</span>
-<button id="copy-btn" class="copy-btn">[COPY]</button>
-</div>
-</div>
-
-<div class="qr-container">
-<p class="qr-label">> Scan to Download</p>
-<img id="qr-code" src="" alt="QR Code">
-</div>
-
-<div class="transfer-info">
-<div id="password-notice" class="info-item hidden">
-<span>🔐</span>
-<p>Password protected</p>
-</div>
-<div class="info-item">
-<span>⏱️</span>
-<p id="expire-text">Self-destructs in 24 hours</p>
-</div>
-</div>
-
-<button id="new-upload" class="secondary-btn">[ New Transfer ]</button>
-</div>
-
-<!-- Download Section -->
-<div id="download-section" class="card">
-<div class="card-header">
-<span class="icon">📥</span>
-<h2>Retrieve File</h2>
-</div>
-
-<div class="code-input-container">
-<input type="text" id="code-input" placeholder="Enter access code" maxlength="6">
-<button id="check-btn" class="primary-btn">
-<span>Check</span>
-<span class="btn-icon">→</span>
-</button>
-</div>
-
-<div id="download-info" class="download-info hidden">
-<div class="file-preview">
-<span class="file-icon">📄</span>
-<div>
-<p id="download-name">filename.zip</p>
-<p id="download-size">2.4 MB</p>
-<p id="download-stats" class="download-stats"></p>
-</div>
-</div>
-
-<div id="password-input-container" class="password-input-container hidden">
-<label>🔐 Enter Password</label>
-<input type="password" id="download-password" placeholder="Password required">
-</div>
-
-<button id="download-btn" class="primary-btn">
-<span>Decrypt & Download</span>
-<span class="btn-icon">↓</span>
-</button>
-</div>
-
-<p id="download-error" class="error hidden">> ERROR: File not found</p>
-</div>
-</div>
-
-<!-- Tab Content: Social Download -->
-<div id="social-tab" class="tab-content">
-<div class="card">
-<div class="card-header">
-<span class="icon">📥</span>
-<h2>Social Media Downloader</h2>
-</div>
-
-<div class="platforms">
-<span class="platform-badge">📸 Instagram</span>
-<span class="platform-badge">🎵 TikTok</span>
-<span class="platform-badge">🐦 Twitter</span>
-<span class="platform-badge">📺 YouTube</span>
-<span class="platform-badge">📘 Facebook</span>
-</div>
-
-<div class="social-input-container">
-<input type="text" id="social-url" placeholder="Paste video/image URL here...">
-<button id="fetch-btn" class="primary-btn">
-<span>Fetch</span>
-<span class="btn-icon">🔍</span>
-</button>
-</div>
-
-<div id="social-loading" class="loading hidden">
-<div class="spinner"></div>
-<p>> Fetching media...</p>
-</div>
-
-<div id="social-result" class="social-result hidden">
-<div class="result-header">
-<span id="platform-icon">📸</span>
-<div>
-<p id="result-platform">Instagram</p>
-<p id="result-title">Video Title</p>
-</div>
-</div>
-
-<img id="result-thumbnail" class="thumbnail hidden" src="" alt="Thumbnail">
-
-<div id="download-options" class="download-options">
-<!-- Download links will be inserted here -->
-</div>
-</div>
-
-<p id="social-error" class="error hidden">> ERROR: Could not fetch media</p>
-</div>
-</div>
-
-<footer>
-<p>[ GATECORP ] // File Operations Hub v3.0</p>
-<p class="footer-sub">See you space cowboy... 🚀</p>
-</footer>
-</div>
-
-<script src="script.js"></script>
+        <footer>
+            <p>[ GATECORP ] // Secure Cowboy v3.1 🚀</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
