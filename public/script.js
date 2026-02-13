@@ -20,7 +20,6 @@ fileInput.addEventListener('change', (e) => {
         uploadBtn.classList.remove('hidden');
     }
 });
-
 uploadBtn.addEventListener('click', async () => {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -29,23 +28,43 @@ uploadBtn.addEventListener('click', async () => {
 
     uploadBtn.classList.add('hidden');
     document.getElementById('progress-container').classList.remove('hidden');
+    const pText = document.getElementById('progress-text');
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/upload');
+
     xhr.upload.onprogress = (e) => {
-        const p = Math.round((e.loaded / e.total) * 100);
-        document.getElementById('progress').style.width = p + '%';
+        if (e.lengthComputable) {
+            const p = Math.round((e.loaded / e.total) * 100);
+            document.getElementById('progress').style.width = p + '%';
+            if (p === 100) {
+                pText.innerText = "> Finalizing... Please wait.";
+            } else {
+                pText.innerText = `> Uploading... ${p}%`;
+            }
+        }
     };
+
     xhr.onload = () => {
-        const res = JSON.parse(xhr.responseText);
-        document.getElementById('share-code').innerText = res.code;
-        document.getElementById('qr-code').src = res.qrCode;
-        document.getElementById('upload-section').classList.add('hidden');
-        document.getElementById('code-section').classList.remove('hidden');
+        if (xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText);
+            document.getElementById('share-code').innerText = res.code;
+            document.getElementById('qr-code').src = res.qrCode;
+            document.getElementById('upload-section').classList.add('hidden');
+            document.getElementById('code-section').classList.remove('hidden');
+        } else {
+            alert("Upload Failed: " + xhr.statusText);
+            resetUpload(); // Make sure you have this function to reset the UI
+        }
     };
+
+    xhr.onerror = () => {
+        alert("Connection Lost. Check your internet.");
+        resetUpload();
+    };
+
     xhr.send(formData);
 });
-
 // SOCIAL DOWNLOAD LOGIC
 const fetchBtn = document.getElementById('fetch-btn');
 fetchBtn.addEventListener('click', async () => {

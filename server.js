@@ -15,92 +15,95 @@ const RAPIDAPI_KEY = '4c92037d6cmshfcb6b326ac154a1p148490jsn2ba7295c4b8e';
 const fileStore = new Map();
 
 if (!fs.existsSync('uploads')) {
-fs.mkdirSync('uploads');
+    fs.mkdirSync('uploads');
 }
 
 const storage = multer.diskStorage({
-destination: 'uploads/',
-filename: (req, file, cb) => {
-const uniqueName = uuidv4() + path.extname(file.originalname);
-cb(null, uniqueName);
-}
+    destination: 'uploads/',
+    filename: (req, file, cb) => {
+        const uniqueName = uuidv4() + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
 });
 
 const upload = multer({
-storage,
-limits: { fileSize: 2 * 1024 * 1024 * 1024 }
+    storage,
+    limits: { fileSize: 2 * 1024 * 1024 * 1024 }
 });
 
 app.use(express.static('public'));
 app.use(express.json());
 
 function generateCode() {
-return Math.floor(100000 + Math.random() * 900000).toString();
+    return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// ═══════════════════════════════════════
 // 📤 FILE SHARING ENDPOINTS
-// ═══════════════════════════════════════
+aapp.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-if (!req.file) {
-return res.status(400).json({ error: 'No file uploaded' });
-}
+        const code = generateCode();
+        const password = req.body.password || null;
+        const expiryHours = parseInt(req.body.expiry) || 24;
 
-const code = generateCode();
-const password = req.body.password || null;
-const expiryHours = parseInt(req.body.expiry) || 24;
+        const fileData = {
+            originalName: req.file.originalname,
+            filename: req.file.filename,
+            size: req.file.size,
+            password: password,
+            downloads: 0,
+            uploadedAt: Date.now(),
+            expiresAt: Date.now() + (expiryHours * 60 * 60 * 1000)
+        };
 
-const fileData = {
-originalName: req.file.originalname,
-filename: req.file.filename,
-size: req.file.size,
-password: password,
-downloads: 0,
-uploadedAt: Date.now(),
-expiresAt: Date.now() + (expiryHours * 60 * 60 * 1000),
-expiryHours: expiryHours
-};
+        fileStore.set(code, fileData);
 
-fileStore.set(code, fileData);
+        // Generate QR Code BEFORE sending response
+        const downloadUrl = `${req.protocol}://${req.get('host')}/download/${code}`;
+        const qrCode = await QRCode.toDataURL(downloadUrl);
 
-const downloadUrl = `${req.protocol}://${req.get('host')}/download/${code}`;
-const qrCode = await QRCode.toDataURL(downloadUrl);
+        // SET TIMEOUT for deletion
+        setTimeout(() => {
+            const file = fileStore.get(code);
+            if (file) {
+                const filePath = path.join(__dirname, 'uploads', file.filename);
+                if (fs.existsSync(filePath)) {
+                    fs.unlink(filePath, (err) => {
+                        if (err) console.error("Auto-delete error:", err);
+                    });
+                }
+                fileStore.delete(code);
+            }
+        }, expiryHours * 60 * 60 * 1000);
 
-setTimeout(() => {
-const file = fileStore.get(code);
-if (file) {
-fs.unlink(path.join('uploads', file.filename), () => {});
-fileStore.delete(code);
-}
-}, expiryHours * 60 * 60 * 1000);
+        // SEND RESPONSE IMMEDIATELY
+        return res.status(200).json({ 
+            code, 
+            expiresIn: expiryHours + ' hours', 
+            passwordProtected: !!password, 
+            qrCode 
+        });
 
-res.json({
-code,
-expiresIn: expiryHours + ' hours',
-passwordProtected: !!password,
-qrCode: qrCode
-});
+    } catch (error) {
+        console.error("Upload Error:", error);
+        return res.status(500).json({ error: "Server failed to process file" });
+    }
 });
 
 app.get('/info/:code', (req, res) => {
 const code = req.params.code;
 const fileData = fileStore.get(code);
-
-if (!fileData) {
-return res.status(404).json({ error: 'File not found or expired' });
-}
-
+if (!fileData) return res.status(404).json({ error: 'File not found' });
 const timeLeft = Math.max(0, fileData.expiresAt - Date.now());
-const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
-const minsLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-
 res.json({
 name: fileData.originalName,
 size: fileData.size,
 downloads: fileData.downloads,
 passwordProtected: !!fileData.password,
-expiresIn: `${hoursLeft}h ${minsLeft}m`,
+expiresIn: Math.floor(timeLeft / (1000 * 60 * 60)) + "h",
 expiresAt: fileData.expiresAt
 });
 });
@@ -108,107 +111,53 @@ expiresAt: fileData.expiresAt
 app.post('/download/:code', (req, res) => {
 const code = req.params.code;
 const fileData = fileStore.get(code);
-
-if (!fileData) {
-return res.status(404).json({ error: 'File not found or expired' });
-}
-
-if (fileData.password && fileData.password !== req.body.password) {
-return res.status(401).json({ error: 'Wrong password' });
-}
-
+if (!fileData) return res.status(404).json({ error: 'Expired' });
+if (fileData.password && fileData.password !== req.body.password) return res.status(401).json({ error: 'Wrong password' });
 fileData.downloads++;
-const filePath = path.join(__dirname, 'uploads', fileData.filename);
-res.download(filePath, fileData.originalName);
+res.download(path.join(__dirname, 'uploads', fileData.filename), fileData.originalName);
 });
 
 app.get('/download/:code', (req, res) => {
 const code = req.params.code;
 const fileData = fileStore.get(code);
-
-if (!fileData) {
-return res.status(404).json({ error: 'File not found or expired' });
-}
-
-if (fileData.password) {
-return res.status(401).json({ error: 'Password required', needsPassword: true });
-}
-
+if (!fileData || fileData.password) return res.status(401).json({ error: 'Action denied' });
 fileData.downloads++;
-const filePath = path.join(__dirname, 'uploads', fileData.filename);
-res.download(filePath, fileData.originalName);
+res.download(path.join(__dirname, 'uploads', fileData.filename), fileData.originalName);
 });
 
-app.get('/qr/:code', async (req, res) => {
-const code = req.params.code;
-const fileData = fileStore.get(code);
-
-if (!fileData) {
-return res.status(404).json({ error: 'File not found' });
-}
-
-const downloadUrl = `${req.protocol}://${req.get('host')}/download/${code}`;
-const qrCode = await QRCode.toDataURL(downloadUrl);
-res.json({ qrCode });
-});
-
-// ═══════════════════════════════════════
-// 📥 SOCIAL MEDIA DOWNLOADER ENDPOINTS
-// ═══════════════════════════════════════
-
+// 📥 SOCIAL MEDIA DOWNLOADER (FIXED ENDPOINT)
 app.post('/api/social-download', async (req, res) => {
-  const { url } = req.body;
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ error: 'URL is required' });
 
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required' });
-  }
+    try {
+        const response = await axios.post('https://social-download-all-in-one.p.rapidapi.com/v1/social/autodownload', 
+        { url: url }, 
+        {
+            headers: {
+                'X-RapidAPI-Key': RAPIDAPI_KEY,
+                'X-RapidAPI-Host': 'social-download-all-in-one.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            }
+        });
 
-  try {
-    // This API usually uses a POST request for 'autodownload'
-    const response = await axios.post('https://social-download-all-in-one.p.rapidapi.com/v1/social/autodownload', 
-    { 
-      url: url 
-    }, 
-    {
-      headers: {
-        'X-RapidAPI-Key': RAPIDAPI_KEY, 
-        'X-RapidAPI-Host': 'social-download-all-in-one.p.rapidapi.com',
-        'Content-Type': 'application/json'
-      }
-    });
-
-    console.log("Fetching media from:", url);
-
-    // This API uses 'medias' to store the list of video/image links
-    if (response.data && response.data.medias) {
-      res.json({
-        success: true,
-        platform: response.data.source || "Media",
-        title: response.data.title || 'Download Ready',
-        thumbnail: response.data.thumbnail || null,
-        medias: response.data.medias
-      });
-    } else {
-      res.status(404).json({ error: 'No download links found. Make sure the link is public.' });
+        if (response.data && response.data.medias) {
+            res.json({
+                success: true,
+                platform: response.data.source || "Media",
+                title: response.data.title || 'Ready to Download',
+                thumbnail: response.data.thumbnail || response.data.picture || null,
+                medias: response.data.medias
+            });
+        } else {
+            res.status(404).json({ error: 'Links not found. Is it a public post?' });
+        }
+    } catch (error) {
+        console.error('API Error:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to fetch. Check your API subscription on RapidAPI.' });
     }
-  } catch (error) {
-    console.error('Social download error:', error.response ? error.response.status : error.message);
-    res.status(500).json({ error: 'Failed to fetch media. Please check your API subscription.' });
-  }
 });
-
-function detectPlatform(url) {
-if (url.includes('instagram.com')) return 'Instagram';
-if (url.includes('tiktok.com')) return 'TikTok';
-if (url.includes('twitter.com') || url.includes('x.com')) return 'Twitter/X';
-if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
-if (url.includes('facebook.com') || url.includes('fb.watch')) return 'Facebook';
-if (url.includes('pinterest.com')) return 'Pinterest';
-if (url.includes('reddit.com')) return 'Reddit';
-if (url.includes('linkedin.com')) return 'LinkedIn';
-return 'Unknown';
-}
 
 app.listen(PORT, () => {
-console.log(`🚀 GATECORP running at http://localhost:${PORT}`);
+    console.log(`🚀 GATECORP LIVE at http://localhost:${PORT}`);
 });
