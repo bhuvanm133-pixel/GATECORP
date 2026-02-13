@@ -39,7 +39,7 @@ function generateCode() {
 }
 
 // 📤 FILE SHARING ENDPOINTS
-aapp.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
