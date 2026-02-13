@@ -3,109 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GATECORP - Secure Systems</title>
+    <title>GATECORP | Developer Hub</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="background">
-        <div class="grid-overlay"></div>
-    </div>
 
-    <!-- FIXED HEADER BAR -->
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <h1 class="nav-logo">GATECORP</h1>
-            <div class="nav-menu">
-                <a href="#downloader-section" class="nav-link">Downloader</a>
-                <a href="#transfer-section" class="nav-link">Transfer</a>
+            <div class="logo">
+                <span class="logo-icon">⬡</span>
+                <span class="logo-text">GATECORP</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="#api">API</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="#" class="btn btn-ghost">Sign In</a>
+                <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <header class="hero-header">
-            <div class="status">
-                <span class="status-dot"></span>
-                <span>SYSTEM ONLINE</span>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">
+                <span class="pulse"></span>
+                Developer Hub
             </div>
-            <p class="tagline">[ Secure File Transfer Protocol ]</p>
-        </header>
-
-        <main>
-            <!-- 1. VIDEO DOWNLOADER -->
-            <div id="downloader-section" class="card">
-                <div class="card-header">🎬 Social Media Downloader</div>
-                <div class="social-input-container">
-                    <input type="text" id="social-url" placeholder="Paste Link (Insta, TikTok, YouTube...)">
-                    <button id="fetch-btn" class="primary-btn">Fetch 🔍</button>
-                </div>
-                <div id="social-loading" class="loading hidden"><div class="spinner"></div></div>
-                <div id="social-result" class="hidden">
-                    <p id="result-title"></p>
-                    <img id="result-thumbnail" class="thumbnail" src="">
-                    <div id="download-options" class="download-options"></div>
-                </div>
-                <p id="social-error" class="error hidden">> ERROR: Fetch Failed</p>
+            <h1 class="hero-title">
+                Build the <span class="gradient-text">Future</span><br>
+                with GATECORP
+            </h1>
+            <p class="hero-subtitle">
+                Powerful APIs, seamless integration, and enterprise-grade security. 
+                Everything you need to build extraordinary applications.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary btn-large">
+                    <i class="fas fa-rocket"></i> Start Building
+                </a>
+                <a href="#" class="btn btn-outline btn-large">
+                    <i class="fas fa-book"></i> Read Docs
+                </a>
             </div>
-
-            <!-- 2. FILE UPLOAD -->
-            <div id="transfer-section" class="card">
-                <div class="card-header">📤 Initialize File Upload</div>
-                <div id="drop-zone" class="drop-zone">
-                    <span class="drop-icon">⬆️</span>
-                    <p>Drop file or <label for="file-input" class="browse-btn">Select</label></p>
-                    <input type="file" id="file-input" hidden>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">10M+</span>
+                    <span class="stat-label">API Calls/Day</span>
                 </div>
-                <div id="file-info" class="file-info hidden">
-                    <span id="file-name"></span> <button id="remove-file">✕</button>
+                <div class="stat">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime</span>
                 </div>
-                <div id="upload-options" class="upload-options hidden">
-                    <input type="password" id="file-password" placeholder="Add Password (Optional)">
-                    <select id="expiry-time">
-                        <option value="24">24 Hours</option>
-                        <option value="168">7 Days</option>
-                    </select>
+                <div class="stat">
+                    <span class="stat-number">150+</span>
+                    <span class="stat-label">Countries</span>
                 </div>
-                <div id="progress-container" class="progress-container hidden">
-                    <div class="progress-bar"><div id="progress" class="progress"></div></div>
-                    <p id="progress-text">> Uploading... 0%</p>
-                </div>
-                <button id="upload-btn" class="primary-btn hidden">Start Transfer ►</button>
             </div>
-
-            <!-- 3. ACCESS CODE -->
-            <div id="code-section" class="card hidden">
-                <div class="card-header">✅ Transfer Complete</div>
-                <div class="code-display">
-                    <p>> Access Code</p>
-                    <span id="share-code">000000</span>
-                    <button id="copy-btn">[COPY]</button>
+        </div>
+        <div class="hero-visual">
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="window-title">api-example.js</span>
                 </div>
-                <div class="qr-container"><img id="qr-code" src=""></div>
-                <button id="new-upload" class="secondary-btn">New Transfer</button>
+                <pre class="code-content">
+<span class="code-keyword">const</span> gatecorp = <span class="code-function">require</span>(<span class="code-string">'gatecorp-sdk'</span>);
+
+<span class="code-keyword">const</span> client = <span class="code-keyword">new</span> gatecorp.Client({
+    apiKey: <span class="code-string">'your-api-key'</span>
+});
+
+<span class="code-keyword">const</span> response = <span class="code-keyword">await</span> client.files.<span class="code-function">upload</span>({
+    file: myFile,
+    expiry: <span class="code-string">'24h'</span>
+});
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(response.downloadUrl);
+                </pre>
             </div>
+        </div>
+    </section>
 
-            <!-- 4. RETRIEVE -->
-            <div class="card">
-                <div class="card-header">📥 Retrieve via Code</div>
-                <div class="code-input-container">
-                    <input type="text" id="code-input" placeholder="Enter Code" maxlength="6">
-                    <button id="check-btn" class="primary-btn">Check</button>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Everything You Need</h2>
+            <p class="section-subtitle">Powerful tools to supercharge your development workflow</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
                 </div>
-                <div id="download-info" class="hidden">
-                    <p id="download-name"></p>
-                    <input type="password" id="download-password" class="hidden" placeholder="Password Required">
-                    <button id="download-btn" class="primary-btn">Download ↓</button>
-                </div>
-                <p id="download-error" class="error hidden">> ERROR: File not found</p>
+                <h3>Lightning Fast</h3>
+                <p>Sub-100ms response times globally with our edge network infrastructure.</p>
             </div>
-        </main>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h3>Enterprise Security</h3>
+                <p>End-to-end encryption, SOC2 compliant, and GDPR ready out of the box.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Developer First</h3>
+                <p>Beautiful SDKs, comprehensive docs, and responsive support team.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>Scale Infinitely</h3>
+                <p>From prototype to production, we scale with your needs automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3>Easy Integration</h3>
+                <p>RESTful APIs, webhooks, and native SDKs for every major platform.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Real-time Analytics</h3>
+                <p>Monitor everything with detailed dashboards and custom alerts.</p>
+            </div>
+        </div>
+    </section>
 
-        <footer>
-            <p>[ GATECORP ] // Secure Cowboy v3.3 🚀</p>
-            <p class="footer-sub">See you space cowboy...</p>
-        </footer>
-    </div>
-    <script src="script.js"></script>
+    <!-- API Section -->
+    <section class="api-section" id="api">
+        <div class="api-content">
+            <h2 class="section-title">Powerful REST API</h2>
+            <p class="section-subtitle">Simple, intuitive endpoints that just work</p>
+            <div class="endpoint-list">
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <code>/api/v1/files/:id</code>
+                </div>
+                <div class="endpoint">
+                    <span class="method post">POST</span>
+                    <code>/api/v1/files/upload</code>
+                </div>
+                <div class="endpoint">
+                    <span class="method delete">DELETE</span>
+                    <code>/api/v1/files/:id</code>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <code>/api/v1/analytics</code>
+                </div>
+            </div>
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-book"></i> Full API Reference
+            </a>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Build?</h2>
+            <p>Join thousands of developers already using GATECORP</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary btn-large">
+                    Get Free API Key
+                </a>
+                <a href="#" class="btn btn-ghost btn-large">
+                    Contact Sales
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <span class="logo-icon">⬡</span>
+                    <span class="logo-text">GATECORP</span>
+                </div>
+                <p>Building the future of file sharing and media downloads.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Tutorials</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 GATECORP. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
