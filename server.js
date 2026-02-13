@@ -9,6 +9,8 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
+
 // ⚠️ YOUR RAPIDAPI KEY
 const RAPIDAPI_KEY = '4c92037d6cmshfcb6b326ac154a1p148490jsn2ba7295c4b8e';
 
@@ -17,6 +19,21 @@ const fileStore = new Map();
 if (!fs.existsSync('uploads')) {
     fs.mkdirSync('uploads');
 }
+
+// ... your existing code until app.post('/api/social-download' ...
+
+// ADD THIS ^^^
+
+// Fix CORS for frontend
+app.use(cors({
+    origin: '*',  // or your frontend URL
+    credentials: true
+}));
+
+app.listen(PORT, () => {
+    console.log(`🚀 GATECORP LIVE at http://localhost:${PORT}`);
+});
+
 
 const storage = multer.diskStorage({
     destination: 'uploads/',

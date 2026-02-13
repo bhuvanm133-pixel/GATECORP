@@ -1147,56 +1147,24 @@
         });
 
         // ===== RECEIVE FILE =====
-        function receiveFile() {
-            const inputs = document.querySelectorAll('.code-input');
-            let code = '';
-            inputs.forEach(inp => code += inp.value);
+        // Replace receiveFile() fetch with this:
+fetch(`/download/${code}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password })
+})
+.then(res => {
+    console.log('Status:', res.status, 'Headers:', res.headers);  // ADD THIS
+    if (res.ok) { /* download code */ }
+    else {
+        console.log('Error response:', res.statusText);  // ADD THIS
+        return res.text().then(text => {  // Use .text() first
+            console.log('Raw error:', text);
+            showToast(text || 'Server error');
+        });
+    }
+})
 
-            if (code.length !== 6) {
-                showToast('Enter a valid 6-digit code');
-                return;
-            }
-
-            const password = document.getElementById('receivePassword').value;
-            const loader = document.getElementById('receiveLoader');
-            loader.classList.add('show');
-
-            fetch(`/download/${code}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
-            })
-            .then(res => {
-                if (res.ok) {
-                    return res.blob().then(blob => {
-                        const disposition = res.headers.get('Content-Disposition');
-                        let filename = 'download';
-                        if (disposition) {
-                            const match = disposition.match(/filename="?(.+?)"?$/);
-                            if (match) filename = match[1];
-                        }
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = filename;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        showToast('Download started!');
-                    });
-                } else {
-                    return res.json().then(data => {
-                        if (data.passwordRequired) {
-                            document.getElementById('receivePasswordGroup').style.display = 'block';
-                            showToast('Password required');
-                        } else {
-                            showToast(data.error || 'File not found');
-                        }
-                    });
-                }
-            })
-            .catch(() => showToast('Failed to download'))
-            .finally(() => loader.classList.remove('show'));
-        }
 
         // ===== SOCIAL MEDIA DOWNLOAD =====
         function socialDownload() {
