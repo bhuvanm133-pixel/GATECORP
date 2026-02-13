@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GATECORP - Secure Tools</title>
+    <title>GATECORP - Secure Systems</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="background">
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
         <div class="grid-overlay"></div>
     </div>
 
-    <!-- NEW HEADER BAR -->
+    <!-- FIXED HEADER BAR -->
     <nav class="navbar">
         <div class="nav-container">
             <h1 class="nav-logo">GATECORP</h1>
             <div class="nav-menu">
-                <button class="nav-link active" data-tab="share">File Transfer</button>
-                <button class="nav-link" data-tab="social">Video Downloader</button>
+                <a href="#downloader-section" class="nav-link">Downloader</a>
+                <a href="#transfer-section" class="nav-link">Transfer</a>
             </div>
         </div>
     </nav>
@@ -33,10 +31,26 @@
             <p class="tagline">[ Secure File Transfer Protocol ]</p>
         </header>
 
-        <!-- FILE SHARE TAB -->
-        <div id="share-tab" class="tab-content active">
-            <div id="upload-section" class="card">
-                <div class="card-header">📤 Initialize Upload</div>
+        <main>
+            <!-- 1. VIDEO DOWNLOADER -->
+            <div id="downloader-section" class="card">
+                <div class="card-header">🎬 Social Media Downloader</div>
+                <div class="social-input-container">
+                    <input type="text" id="social-url" placeholder="Paste Link (Insta, TikTok, YouTube...)">
+                    <button id="fetch-btn" class="primary-btn">Fetch 🔍</button>
+                </div>
+                <div id="social-loading" class="loading hidden"><div class="spinner"></div></div>
+                <div id="social-result" class="hidden">
+                    <p id="result-title"></p>
+                    <img id="result-thumbnail" class="thumbnail" src="">
+                    <div id="download-options" class="download-options"></div>
+                </div>
+                <p id="social-error" class="error hidden">> ERROR: Fetch Failed</p>
+            </div>
+
+            <!-- 2. FILE UPLOAD -->
+            <div id="transfer-section" class="card">
+                <div class="card-header">📤 Initialize File Upload</div>
                 <div id="drop-zone" class="drop-zone">
                     <span class="drop-icon">⬆️</span>
                     <p>Drop file or <label for="file-input" class="browse-btn">Select</label></p>
@@ -54,11 +68,14 @@
                 </div>
                 <div id="progress-container" class="progress-container hidden">
                     <div class="progress-bar"><div id="progress" class="progress"></div></div>
+                    <p id="progress-text">> Uploading... 0%</p>
                 </div>
                 <button id="upload-btn" class="primary-btn hidden">Start Transfer ►</button>
             </div>
 
+            <!-- 3. ACCESS CODE -->
             <div id="code-section" class="card hidden">
+                <div class="card-header">✅ Transfer Complete</div>
                 <div class="code-display">
                     <p>> Access Code</p>
                     <span id="share-code">000000</span>
@@ -68,8 +85,9 @@
                 <button id="new-upload" class="secondary-btn">New Transfer</button>
             </div>
 
-            <div id="download-section" class="card">
-                <div class="card-header">📥 Retrieve File</div>
+            <!-- 4. RETRIEVE -->
+            <div class="card">
+                <div class="card-header">📥 Retrieve via Code</div>
                 <div class="code-input-container">
                     <input type="text" id="code-input" placeholder="Enter Code" maxlength="6">
                     <button id="check-btn" class="primary-btn">Check</button>
@@ -79,30 +97,13 @@
                     <input type="password" id="download-password" class="hidden" placeholder="Password Required">
                     <button id="download-btn" class="primary-btn">Download ↓</button>
                 </div>
-                <p id="download-error" class="error hidden">> ERROR</p>
+                <p id="download-error" class="error hidden">> ERROR: File not found</p>
             </div>
-        </div>
-
-        <!-- VIDEO DOWNLOADER TAB -->
-        <div id="social-tab" class="tab-content">
-            <div class="card">
-                <div class="card-header">🎬 Video Downloader</div>
-                <div class="social-input-container">
-                    <input type="text" id="social-url" placeholder="Paste Link (Insta, TikTok, YouTube...)">
-                    <button id="fetch-btn" class="primary-btn">Fetch 🔍</button>
-                </div>
-                <div id="social-loading" class="loading hidden"><div class="spinner"></div></div>
-                <div id="social-result" class="hidden">
-                    <p id="result-title"></p>
-                    <img id="result-thumbnail" class="thumbnail" src="">
-                    <div id="download-options" class="download-options"></div>
-                </div>
-                <p id="social-error" class="error hidden">> ERROR: Fetch Failed</p>
-            </div>
-        </div>
+        </main>
 
         <footer>
-            <p>[ GATECORP ] // Secure Cowboy v3.1 🚀</p>
+            <p>[ GATECORP ] // Secure Cowboy v3.3 🚀</p>
+            <p class="footer-sub">See you space cowboy...</p>
         </footer>
     </div>
     <script src="script.js"></script>
