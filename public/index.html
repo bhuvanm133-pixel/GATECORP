@@ -6,6 +6,8 @@
     <title>GATECORP | Share & Download</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -28,7 +30,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
+            background:
                 radial-gradient(circle at 30% 40%, rgba(255,255,255,0.03) 0%, transparent 50%),
                 radial-gradient(circle at 70% 60%, rgba(255,255,255,0.02) 0%, transparent 50%);
             animation: bgFloat 20s ease infinite;
@@ -46,7 +48,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
             background-size: 80px 80px;
@@ -472,26 +474,6 @@
             background: rgba(255,255,255,0.15);
         }
 
-        /* ===== DOWNLOAD SECTION ===== */
-        .download-section {
-            margin-top: 2rem;
-        }
-
-        .download-input-row {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .download-input-row .input-field {
-            flex: 1;
-        }
-
-        .download-input-row .btn {
-            width: auto;
-            padding: 0.85rem 1.5rem;
-        }
-
         /* ===== SOCIAL MEDIA SECTION ===== */
         .social-input-row {
             display: flex;
@@ -622,6 +604,10 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .media-download:hover {
@@ -658,6 +644,125 @@
         .code-input:focus {
             border-color: rgba(255,255,255,0.25);
             background: rgba(255,255,255,0.08);
+        }
+
+        /* ===== QR SCANNER ===== */
+        .scan-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .scan-divider .line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .scan-divider span {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scan-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .scan-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .scan-btn.active {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .qr-scanner-container {
+            display: none;
+            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .qr-scanner-container.show {
+            display: block;
+        }
+
+        #qr-reader {
+            width: 100% !important;
+            border: none !important;
+        }
+
+        #qr-reader video {
+            border-radius: 16px;
+        }
+
+        #qr-reader__scan_region {
+            background: transparent !important;
+        }
+
+        #qr-reader__dashboard {
+            display: none !important;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .scanner-overlay::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-top-color: #22c55e;
+            border-radius: 20px;
+            animation: scanRotate 2s linear infinite;
+        }
+
+        @keyframes scanRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .scanner-status {
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.5);
         }
 
         /* ===== LOADING ===== */
@@ -743,6 +848,32 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* ===== SOCIAL ERROR/NOTICE ===== */
+        .social-notice {
+            display: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .social-notice.show {
+            display: block;
+        }
+
+        .social-notice p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .social-notice .error-icon {
+            font-size: 1.5rem;
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .hero h1 {
@@ -766,12 +897,10 @@
                 grid-template-columns: 1fr;
             }
 
-            .download-input-row,
             .social-input-row {
                 flex-direction: column;
             }
 
-            .download-input-row .btn,
             .social-input-row .btn {
                 width: 100%;
             }
@@ -794,7 +923,6 @@
     </style>
 </head>
 <body>
-
     <div class="bg-glow"></div>
     <div class="grid-bg"></div>
 
@@ -806,13 +934,13 @@
                 <span class="logo-text">GATECORP</span>
             </div>
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchTab('upload')">
+                <button class="nav-tab active" data-tab="upload" onclick="switchTab('upload', this)">
                     <i class="fas fa-upload"></i> Share
                 </button>
-                <button class="nav-tab" onclick="switchTab('receive')">
+                <button class="nav-tab" data-tab="receive" onclick="switchTab('receive', this)">
                     <i class="fas fa-download"></i> Receive
                 </button>
-                <button class="nav-tab" onclick="switchTab('social')">
+                <button class="nav-tab" data-tab="social" onclick="switchTab('social', this)">
                     <i class="fas fa-video"></i> Social
                 </button>
             </div>
@@ -909,12 +1037,11 @@
 
         <!-- ===== RECEIVE SECTION ===== -->
         <div class="section" id="receive-section">
-
             <div class="receive-card glass-strong">
                 <div style="text-align:center">
-                    <i class="fas fa-download" style="font-size:2rem; color:rgba(255,255,255,0.15); margin-bottom:1rem"></i>
+                    <i class="fas fa-download" style="font-size:2rem; color:rgba(255,255,255,0.15); margin-bottom:1rem; display:block"></i>
                     <h3 style="font-size:1.1rem; margin-bottom:0.3rem">Enter Share Code</h3>
-                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.3)">Enter the 6-digit code to download</p>
+                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.3)">Enter the 6-digit code or scan QR</p>
                 </div>
 
                 <div class="code-inputs" id="codeInputs">
@@ -924,6 +1051,24 @@
                     <input type="text" class="code-input" maxlength="1" data-index="3">
                     <input type="text" class="code-input" maxlength="1" data-index="4">
                     <input type="text" class="code-input" maxlength="1" data-index="5">
+                </div>
+
+                <!-- QR Scanner Divider -->
+                <div class="scan-divider">
+                    <div class="line"></div>
+                    <span>or scan QR code</span>
+                    <div class="line"></div>
+                </div>
+
+                <!-- QR Scanner Button -->
+                <button class="scan-btn" id="scanBtn" onclick="toggleScanner()">
+                    <i class="fas fa-qrcode"></i> Open Camera Scanner
+                </button>
+
+                <!-- QR Scanner View -->
+                <div class="qr-scanner-container" id="qrScannerContainer">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-status" id="scannerStatus">Point your camera at the QR code</div>
                 </div>
 
                 <div class="input-group" id="receivePasswordGroup" style="display:none; margin-bottom:1.5rem">
@@ -944,7 +1089,6 @@
 
         <!-- ===== SOCIAL MEDIA SECTION ===== -->
         <div class="section" id="social-section">
-
             <div class="social-platforms">
                 <div class="platform-icon"><i class="fab fa-youtube"></i></div>
                 <div class="platform-icon"><i class="fab fa-instagram"></i></div>
@@ -955,7 +1099,7 @@
 
             <div class="social-input-row">
                 <input type="text" class="input-field" id="socialUrl" placeholder="Paste video URL here...">
-                <button class="btn btn-white" onclick="socialDownload()" style="white-space:nowrap">
+                <button class="btn btn-white" id="socialFetchBtn" onclick="socialDownload()" style="white-space:nowrap">
                     <i class="fas fa-search"></i> Fetch
                 </button>
             </div>
@@ -963,6 +1107,11 @@
             <div class="loader" id="socialLoader">
                 <div class="spinner"></div>
                 <p>Fetching download links...</p>
+            </div>
+
+            <div class="social-notice" id="socialError">
+                <div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <p id="socialErrorText">Could not fetch download links. Please check the URL and try again.</p>
             </div>
 
             <div class="social-result glass-strong" id="socialResult">
@@ -976,7 +1125,6 @@
                 <div class="media-list" id="mediaList"></div>
             </div>
         </div>
-
     </div>
 
     <!-- Toast -->
@@ -984,17 +1132,20 @@
 
     <script>
         // ===== TAB SWITCHING =====
-       function switchTab(tab) {
-    // Add null check for event
-    const tabBtn = event?.target.closest('.nav-tab') || event.target;
-    
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    
-    document.getElementById(tab + '-section').classList.add('active');
-    tabBtn.classList.add('active');  // Fixed: was event.target.closest
-}
+        function switchTab(tab, btnEl) {
+            // Stop QR scanner when switching tabs
+            if (qrScanner && isScannerActive) {
+                stopScanner();
+            }
 
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            document.getElementById(tab + '-section').classList.add('active');
+            if (btnEl) {
+                btnEl.classList.add('active');
+            }
+        }
 
         // ===== TOAST =====
         function showToast(msg) {
@@ -1035,16 +1186,11 @@
         });
 
         function showSelectedFile() {
-    if (selectedFile.size > 2 * 1024 * 1024 * 1024) {  // 2GB limit
-        showToast('File too large. Max 2GB.');
-        removeFile();
-        return;
-    }
-    // ... rest unchanged
-}
-
-
-        function showSelectedFile() {
+            if (selectedFile.size > 2 * 1024 * 1024 * 1024) {
+                showToast('File too large. Max 2GB.');
+                removeFile();
+                return;
+            }
             document.getElementById('fileName').textContent = selectedFile.name;
             document.getElementById('fileSize').textContent = formatSize(selectedFile.size);
             document.getElementById('fileSelected').classList.add('show');
@@ -1128,43 +1274,262 @@
 
         function copyCode() {
             const code = document.getElementById('resultCode').textContent;
-            navigator.clipboard.writeText(code);
-            showToast('Code copied!');
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Code copied!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Code copied!');
+            });
         }
 
         // ===== CODE INPUT =====
         document.querySelectorAll('.code-input').forEach((input, i, inputs) => {
             input.addEventListener('input', (e) => {
-                if (e.target.value && i < inputs.length - 1) {
+                const val = e.target.value.toUpperCase();
+                e.target.value = val;
+                if (val && i < inputs.length - 1) {
                     inputs[i + 1].focus();
                 }
             });
+
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !e.target.value && i > 0) {
                     inputs[i - 1].focus();
                 }
             });
+
+            // Allow paste of full code
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim().toUpperCase();
+                if (pasteData.length >= 6) {
+                    inputs.forEach((inp, idx) => {
+                        inp.value = pasteData[idx] || '';
+                    });
+                    inputs[Math.min(pasteData.length - 1, 5)].focus();
+                }
+            });
         });
+
+        // ===== QR CAMERA SCANNER =====
+        let qrScanner = null;
+        let isScannerActive = false;
+
+        function toggleScanner() {
+            if (isScannerActive) {
+                stopScanner();
+            } else {
+                startScanner();
+            }
+        }
+
+        function startScanner() {
+            const container = document.getElementById('qrScannerContainer');
+            const scanBtn = document.getElementById('scanBtn');
+            const statusEl = document.getElementById('scannerStatus');
+
+            container.classList.add('show');
+            scanBtn.classList.add('active');
+            scanBtn.innerHTML = '<i class="fas fa-times"></i> Close Scanner';
+            statusEl.textContent = 'Starting camera...';
+
+            qrScanner = new Html5Qrcode("qr-reader");
+
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            qrScanner.start(
+                { facingMode: "environment" },
+                config,
+                (decodedText) => {
+                    // QR code scanned successfully
+                    onQRCodeScanned(decodedText);
+                },
+                (errorMessage) => {
+                    // Scan error (ignore, it fires constantly while looking)
+                }
+            ).then(() => {
+                isScannerActive = true;
+                statusEl.textContent = 'Point your camera at the QR code';
+            }).catch((err) => {
+                console.error('Camera error:', err);
+                statusEl.textContent = 'Camera access denied. Please allow camera permissions.';
+                container.classList.remove('show');
+                scanBtn.classList.remove('active');
+                scanBtn.innerHTML = '<i class="fas fa-qrcode"></i> Open Camera Scanner';
+                showToast('Could not access camera');
+            });
+        }
+
+        function stopScanner() {
+            const container = document.getElementById('qrScannerContainer');
+            const scanBtn = document.getElementById('scanBtn');
+
+            if (qrScanner && isScannerActive) {
+                qrScanner.stop().then(() => {
+                    qrScanner.clear();
+                    isScannerActive = false;
+                    container.classList.remove('show');
+                    scanBtn.classList.remove('active');
+                    scanBtn.innerHTML = '<i class="fas fa-qrcode"></i> Open Camera Scanner';
+                }).catch((err) => {
+                    console.error('Stop error:', err);
+                    isScannerActive = false;
+                    container.classList.remove('show');
+                    scanBtn.classList.remove('active');
+                    scanBtn.innerHTML = '<i class="fas fa-qrcode"></i> Open Camera Scanner';
+                });
+            }
+        }
+
+        function onQRCodeScanned(decodedText) {
+            // Stop scanner
+            stopScanner();
+
+            // Try to extract a 6-digit code from the QR
+            let code = decodedText.trim().toUpperCase();
+
+            // If the QR contains a URL, try to extract code from it
+            // e.g., https://yoursite.com/download/ABC123 or just ABC123
+            const urlMatch = code.match(/\/download\/([A-Z0-9]{6})/i);
+            if (urlMatch) {
+                code = urlMatch[1].toUpperCase();
+            }
+
+            // If code is longer than 6, try last 6 chars or first 6
+            if (code.length > 6) {
+                // Try to find a 6-character alphanumeric sequence
+                const codeMatch = code.match(/[A-Z0-9]{6}/);
+                if (codeMatch) {
+                    code = codeMatch[0];
+                } else {
+                    code = code.substring(0, 6);
+                }
+            }
+
+            if (code.length === 6) {
+                // Fill in the code inputs
+                const inputs = document.querySelectorAll('.code-input');
+                inputs.forEach((input, idx) => {
+                    input.value = code[idx] || '';
+                });
+
+                showToast('QR code scanned: ' + code);
+
+                // Auto-trigger download after a short delay
+                setTimeout(() => {
+                    receiveFile();
+                }, 500);
+            } else {
+                showToast('Invalid QR code format');
+            }
+        }
 
         // ===== RECEIVE FILE =====
-        // Replace receiveFile() fetch with this:
-fetch(`/download/${code}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password })
-})
-.then(res => {
-    console.log('Status:', res.status, 'Headers:', res.headers);  // ADD THIS
-    if (res.ok) { /* download code */ }
-    else {
-        console.log('Error response:', res.statusText);  // ADD THIS
-        return res.text().then(text => {  // Use .text() first
-            console.log('Raw error:', text);
-            showToast(text || 'Server error');
-        });
-    }
-})
+        function receiveFile() {
+            const inputs = document.querySelectorAll('.code-input');
+            let code = '';
+            inputs.forEach(input => {
+                code += input.value;
+            });
+            code = code.trim().toUpperCase();
 
+            if (code.length !== 6) {
+                showToast('Please enter the full 6-digit code');
+                return;
+            }
+
+            const password = document.getElementById('receivePassword').value;
+            const receiveBtn = document.getElementById('receiveBtn');
+            const loader = document.getElementById('receiveLoader');
+
+            receiveBtn.disabled = true;
+            receiveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching...';
+            loader.classList.add('show');
+
+            fetch(`/download/${code}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password })
+            })
+            .then(res => {
+                const contentType = res.headers.get('content-type') || '';
+
+                if (res.ok) {
+                    // Check if it's a JSON response (needs password, etc.)
+                    if (contentType.includes('application/json')) {
+                        return res.json().then(data => {
+                            if (data.requiresPassword) {
+                                document.getElementById('receivePasswordGroup').style.display = 'block';
+                                showToast('This file requires a password');
+                            } else if (data.error) {
+                                showToast(data.error);
+                            } else if (data.downloadUrl) {
+                                // Server returned a download URL
+                                window.location.href = data.downloadUrl;
+                                showToast('Download started!');
+                            }
+                        });
+                    }
+
+                    // It's a file blob - trigger download
+                    const disposition = res.headers.get('content-disposition');
+                    let filename = 'download';
+                    if (disposition && disposition.includes('filename')) {
+                        const matches = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                        if (matches && matches[1]) {
+                            filename = matches[1].replace(/['"]/g, '');
+                        }
+                    }
+
+                    return res.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                        showToast('Download started!');
+                    });
+                } else {
+                    // Error response
+                    if (contentType.includes('application/json')) {
+                        return res.json().then(data => {
+                            if (data.requiresPassword) {
+                                document.getElementById('receivePasswordGroup').style.display = 'block';
+                                showToast('This file requires a password');
+                            } else {
+                                showToast(data.error || data.message || 'Download failed');
+                            }
+                        });
+                    } else {
+                        return res.text().then(text => {
+                            showToast(text || 'Invalid code or file expired');
+                        });
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Download error:', err);
+                showToast('Download failed. Check your connection.');
+            })
+            .finally(() => {
+                receiveBtn.disabled = false;
+                receiveBtn.innerHTML = '<i class="fas fa-download"></i> Download File';
+                loader.classList.remove('show');
+            });
+        }
 
         // ===== SOCIAL MEDIA DOWNLOAD =====
         function socialDownload() {
@@ -1174,21 +1539,38 @@ fetch(`/download/${code}`, {
                 return;
             }
 
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showToast('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+
             const loader = document.getElementById('socialLoader');
             const result = document.getElementById('socialResult');
+            const errorEl = document.getElementById('socialError');
+            const fetchBtn = document.getElementById('socialFetchBtn');
+
             loader.classList.add('show');
             result.classList.remove('show');
+            errorEl.classList.remove('show');
+            fetchBtn.disabled = true;
+            fetchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching...';
 
             fetch('/api/social-download', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url })
+                body: JSON.stringify({ url: url })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status}`);
+                }
+                return res.json();
+            })
             .then(data => {
-                if (data.success) {
+                if (data.success && data.medias && data.medias.length > 0) {
                     document.getElementById('socialTitle').textContent = data.title || 'Video';
-                    document.getElementById('socialPlatform').textContent = data.platform || 'Media';
+                    document.getElementById('socialPlatform').textContent = data.platform || detectPlatform(url);
 
                     const thumb = document.getElementById('socialThumb');
                     if (data.thumbnail) {
@@ -1209,7 +1591,7 @@ fetch(`/download/${code}`, {
                                 <span class="media-quality">${media.quality || 'Download'}</span>
                                 <span class="media-type">${media.extension || media.type || ''}</span>
                             </div>
-                            <a href="${media.url}" target="_blank" class="media-download">
+                            <a href="${media.url}" target="_blank" rel="noopener" class="media-download" download>
                                 <i class="fas fa-download"></i> Download
                             </a>
                         `;
@@ -1218,13 +1600,42 @@ fetch(`/download/${code}`, {
 
                     result.classList.add('show');
                 } else {
-                    showToast(data.error || 'Could not fetch links');
+                    const errMsg = data.error || 'No download links found. Try a different URL.';
+                    document.getElementById('socialErrorText').textContent = errMsg;
+                    errorEl.classList.add('show');
                 }
             })
-            .catch(() => showToast('Failed to fetch. Try again.'))
-            .finally(() => loader.classList.remove('show'));
+            .catch(err => {
+                console.error('Social download error:', err);
+                document.getElementById('socialErrorText').textContent = 
+                    'Failed to fetch download links. Make sure the server is running and the /api/social-download endpoint exists.';
+                errorEl.classList.add('show');
+            })
+            .finally(() => {
+                loader.classList.remove('show');
+                fetchBtn.disabled = false;
+                fetchBtn.innerHTML = '<i class="fas fa-search"></i> Fetch';
+            });
         }
-    </script>
 
+        // Detect platform from URL
+        function detectPlatform(url) {
+            if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+            if (url.includes('instagram.com')) return 'Instagram';
+            if (url.includes('tiktok.com')) return 'TikTok';
+            if (url.includes('twitter.com') || url.includes('x.com')) return 'Twitter/X';
+            if (url.includes('facebook.com') || url.includes('fb.watch')) return 'Facebook';
+            if (url.includes('reddit.com')) return 'Reddit';
+            if (url.includes('pinterest.com')) return 'Pinterest';
+            return 'Media';
+        }
+
+        // Cleanup scanner on page unload
+        window.addEventListener('beforeunload', () => {
+            if (qrScanner && isScannerActive) {
+                qrScanner.stop().catch(() => {});
+            }
+        });
+    </script>
 </body>
 </html>
